@@ -8,7 +8,7 @@ and open the template in the editor.
     Author     : WTSTUDENTS\ms951820
 */
 html { 
-  background-image: url("/img/triangular.png");
+  background-image: url("tmsim.github.io/img/triangular.png");
 }
 
 #footer-wrap { background:#000; }
