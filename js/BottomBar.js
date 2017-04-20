@@ -9,7 +9,7 @@ var aboutWindow;
 function showAboutWindow(){
     if(!aboutWindow || aboutWindow.closed){
         aboutWindow = window.open("", "About","width=400,height=350");
-        aboutWindow.document.writeln("<body background='/TM Simulator/img/triangular.png'>");
+        aboutWindow.document.writeln("<body background='img/triangular.png'>");
         aboutWindow.document.write(
                 //"<h1 style='text-align:center'>ABOUT</h1>" +
                 "<p style='text-align:center'><b>Created By:</b>" +
@@ -20,12 +20,12 @@ function showAboutWindow(){
                 "<b>Directed By:</b><br />" +
                 "H. Paul Haiduk</p>" +
                 //"<br />" +
-                "<center><img  src='/TM Simulator/img/wtamu.png' alt='WTAMU'></center>");
+                "<center><img  src='img/wtamu.png' alt='WTAMU'></center>");
     }
     else{
         aboutWindow.close();
         aboutWindow = window.open("", "About","width=400,height=350");
-        aboutWindow.document.writeln("<body background='/TM Simulator/img/triangular.png'>");
+        aboutWindow.document.writeln("<body background='img/triangular.png'>");
         aboutWindow.document.write(
                 //"<h1 style='text-align:center'>ABOUT</h1>" +
                 "<p style='text-align:center'><b>Created By:</b>" +
@@ -36,6 +36,6 @@ function showAboutWindow(){
                 "<b>Directed By:</b><br />" +
                 "H. Paul Haiduk</p>" +
                 //"<br />" +
-                "<center><img  src='/TM Simulator/img/wtamu.png' alt='WTAMU'></center>");
+                "<center><img  src='img/wtamu.png' alt='WTAMU'></center>");
     }
 }
