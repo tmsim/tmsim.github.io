@@ -7,13 +7,19 @@
         <link rel="shortcut icon" href="/TM Simulator/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="css/w3.css">
         <link rel="stylesheet" href="css/additional.css">
-        <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet"> 
+        <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet">
+        <script type="text/javascript" src="/TM Simulator/js/exceptions.js"></script>
+        <script type="text/javascript" src="/TM Simulator/js/interpreter.js"></script>
+        <script type="text/javascript" src="/TM Simulator/js/tapeProcess.js"></script>
+        <script type="text/javascript" src="/TM Simulator/js/BottomBar.js"></script>
         <script type="text/javascript" src="/TM Simulator/js/jquery.js"></script>  
         <script type="text/javascript" src="/TM Simulator/js/shift.js"></script>
+        <script type="text/javascript" src="/TM Simulator/js/d3.js"></script>
     </head>
-    <body contenteditable="false" class="w3-orbitron center tmid">
+    <body contenteditable="false" class="w3-orbitron center tmid" onmousedown="myWindow.focus();" onmouseup="myWindow.focus();" >
         <div class="w3-panel w3-black">
-        <h2 class="center tmid">TM SIMULATOR</h2><br>
+        <h2 class="w3-orbitron">WTAMU CS Turing Machine Simulator</h2>
+        <h4 id="machinename" class="w3-orbitron"></h4>
         </div>
         <div id="table1group">
         <div id="tape1header">Tape One</div>
@@ -238,108 +244,34 @@
         <div id="tape3arrow" class="">&#10224;</div><br>
         </div>
         <div id="displaygroup">
-            State&nbsp;<input type="text" name="State:" value="" readonly="readonly" size="10" class="w3-round">
-            Steps&nbsp;<input type="text" name="Steps" value="" readonly="readonly" size="4" class="w3-round">
-            Speed&nbsp;<input type="range">
+            State&nbsp;<input id="statebox" type="text" name="State:" value="" readonly="readonly" size="10" class="w3-round">
+            Steps&nbsp;<input id="stepsbox" type="text" name="Steps" value="" readonly="readonly" size="4" class="w3-round">
+            Speed&nbsp;<input id="slider" type="range" min="0" max="0.75" step="0.005" onchange="Intervals();">
         </div>
         <div id="buttongroup">
-            <input type="button" value="Run/Pause" name="RunPauseButton" class="w3-btn w3-round-large controlbutton">
-            <input type="button" value="Step" name="StepButton" class="w3-btn w3-round-large controlbutton">
-            <input type="button" value="Stop/Reset" name="StopResetButton" class="w3-btn w3-round-large controlbutton">
+            <input type="button" value="Run/Pause" name="RunPauseButton" class="w3-btn w3-round-large controlbutton" onclick="runprogram()">
+            <input id="stepbutton" type="button" value="Step" name="StepButton" class="w3-btn w3-round-large controlbutton" onclick="stepprogram()">
+            <input type="button" value="Stop/Reset" name="StopResetButton" class="w3-btn w3-round-large controlbutton" onclick="softreset()">
         </div>
         <div id="filediv">
-        <input id="inputFile" type="file" accept="text/plain" onchange="fileLoad()" class="w3-btn w3-round-large">
-        <script src="/TM Simulator/js/FileGUI.js"></script>
-<<<<<<< HEAD
+        <input id="inputFile" type="file" accept="text/plain" onclick="inputFile.value = '';" onchange="readFile();" class="w3-btn w3-round-large">
+        <script src="/TM Simulator/js/readFile.js"></script>
         </div>
-        <svg id="canvas" width="600" height="500" style="border:3px solid #000000;">
-=======
-        </p>
-        <svg id="svg" width="600" height="500" style="border:3px solid #000000;">
->>>>>>> 735fb3231f7d7ca77bada3d732dcef2c5dd780f8
-            <style type="text/css">
-                .draggable {
-                  cursor: move;
-                }
-            </style>
-            <script type="text/ecmascript"><![CDATA[
-            var selectedElement = 0;
-            var currentX = 0;
-            var currentY = 0;
-            var currentMatrix = 0;
-
-            function selectElement(evt) {
-              selectedElement = evt.target;
-              currentX = evt.clientX;
-              currentY = evt.clientY;
-              currentMatrix = selectedElement.getAttributeNS(null, "transform").slice(7,-1).split(' ');
-
-              for(var i=0; i<currentMatrix.length; i++) {
-                currentMatrix[i] = parseFloat(currentMatrix[i]);
-              }
-
-              selectedElement.setAttributeNS(null, "onmousemove", "moveElement(evt)");
-              selectedElement.setAttributeNS(null, "onmouseout", "deselectElement(evt)");
-              selectedElement.setAttributeNS(null, "onmouseup", "deselectElement(evt)");
-            }
-
-            function moveElement(evt) {
-              var dx = evt.clientX - currentX;
-              var dy = evt.clientY - currentY;
-              currentMatrix[4] += dx;
-              currentMatrix[5] += dy;
-
-              selectedElement.setAttributeNS(null, "transform", "matrix(" + currentMatrix.join(' ') + ")");
-              currentX = evt.clientX;
-              currentY = evt.clientY;
-            }
-
-            function deselectElement(evt) {
-              if(selectedElement != 0){
-                  selectedElement.removeAttributeNS(null, "onmousemove");
-                  selectedElement.removeAttributeNS(null, "onmouseout");
-                  selectedElement.removeAttributeNS(null, "onmouseup");
-                  selectedElement = 0;
-                  }
-                }
-
-            ]]> </script>
-           
-            <circle id='state1' cx="290" cy="150" r="30" 
-                stroke="green" stroke-width="4" 
-                fill="yellow" class='draggable' 
-                transform="matrix(1 0 0 1 0 0)"
-                onmousedown="selectElement(evt)"/>
-            <circle id='state2' cx="290" cy="200" r="30"
-                fill="yellow" class='draggable' 
-                transform="matrix(1 0 0 1 0 0)"
-                onmousedown="selectElement(evt)"/>
-            <!--<line id="testline" x1="5" y1="5"-->
-        </svg>
-<script> <!-- This script must stay below tables to work -->
+        <canvas id="canvas" width="600" height="500" style="border:3px solid #000000;" class="w3-round-large"></canvas>
+        <script type="text/javascript" src="/TM Simulator/js/d3circles.js"></script>
+<script> 
+   
    function initialize(){
        hidetape(2);
        hidetape(3);
    }
-   function hidetape(num){
-       if(num === 2){
-           $("#table2group").hide();
-       }
-       if(num === 3){
-           $("#table3group").hide();
-       }
-   }
-   function showtape(num){
-       if(num === 2){
-           $("#table2group").show();
-       }
-       if(num === 3){
-           $("#table3group").show();
-       }
-   }
    window.onload = initialize();
 </script>
-
+<div class="w3-panel w3-black w3-bottom">
+    <a href="/TM Simulator/Download/TM Prelim User Manual.txt" download="TM Prelim User Manual.txt">User Manual</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href=# onclick="showAboutWindow();">About</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="/TM Simulator/Download/Download.zip" download="Download.zip">Test Files</a>
+</div>
 </body>
  </html>
  
