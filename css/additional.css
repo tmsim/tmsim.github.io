@@ -1,0 +1,54 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Feb 2, 2017, 2:10:57 PM
+    Author     : WTSTUDENTS\ms951820
+*/
+html { 
+  background-image: url("/TM Simulator/img/triangular.png");
+}
+
+#footer-wrap { background:#000; }
+#footer { width:954px; margin:auto; }
+
+
+#file-input {
+  cursor: pointer;
+  outline: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  filter: alpha(opacity=0); /* IE < 9 */
+  opacity: 0;
+}
+.center {text-align: center;}
+.tmid {margin: 0px auto;}
+.tape { fill:#fff; 
+        stroke:#000;
+        stroke-width: 2px;
+        height: 30px;
+        width: 30px;
+        rx: 5px;
+        ry: 5px;
+        }
+.tapetext{fill:#000; font-size: 20px;}
+.controlbutton{width: 150px;}
+
+div#table1group{
+    height: 80px
+}
+div#table2group{
+    height: 80px
+}
+div#table3group{
+    height: 80px
+}
+div#buttongroup{padding-top: 5px}
+div#displaygroup{padding-top: 5px}
+div#filediv{padding-top: 5px; padding-bottom: 5px}

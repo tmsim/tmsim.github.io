@@ -1,0 +1,130 @@
+CS4391 TM Group 5
+
+Updated: 2/7/17 - 	Initial manual created based on group decisions
+Updated: 2/22/17
+Updated: 3/6/17 - 	blank space requirements updated
+Updated: 3/28/17 - 	multiple tape requirements added to the header format and tuple syntax
+					clarified general syntax
+					finally decided on the keywords: BEGIN and END
+
+The following is a preliminary user manual. Provided upon request by the instructor.
+Author: Edgar Fonseca
+
+-------------------------------------------------------------------------------
+[SYNTAX]
+- Tuple format will be expected as follows: 
+	<current state>, <current symbol>, <new symbol>, <direction>, <new state>
+	Example: Start, 1, 0, >, q1
+
+-- A newline character will be interpreted as the end of a single instruction
+--- One full instruction per line is required
+
+-- Spaces between tuple elements will be ignored
+-- The separator (,) will be required between elements
+
+-- When using multiple tapes: <current symbol>, <new symbol>, <direction> will be multivalued
+-- Each value in each element must be separated by a colon (:) separator
+-- Example: For 3 tapes, a correct tuple will look like...
+	Start, 1:2:*, 0:0:0, >:*:<, q1
+
+
+
+- String value from the <current state> element will be case sensitive
+-- an asterisk (*) can be used as a wildcard to accept any state
+-- Spaces will be ignored within the string value
+-- Example: "stat eOne" will be interpreted as "stateOne"
+
+- the <current symbol> element will be any ASCII character 
+-- an asterisk (*) can be used as a wildcard to accept any symbol
+
+- the <new symbol> element will be treated the same as the <current symbol> element
+-- an asterisk (*) can be used to mean 'no change'
+
+- the <direction> element will only accept the following as valid input:
+-- less than symbol (<) to move left
+-- greater than symbol (>) to move right
+-- an asterisk (*) to do nothing
+
+- the <new state> element will be treated the same as the <current symbol> element
+-- an asterisk (*) can be used to indicate no state change
+
+-------------------------------------------------------------------------------
+[FORMAT]
+- user must use a "BEGIN" keyword, on a single line, to mark the beginning of execution
+- user must use a "END" keyword, on a single line, to mark the  end of execution
+- Labels will be expected in the user code to define the following:
+
+-- "name:" for the name of program (to be shown on screen)
+-- no spell check will be made by the parser
+
+-- "tapes:" for the number of tapes requested
+-- only 3 maximum tuples may be requested
+-- syntax on tuples will depend on this value
+-- only a single numerical value (1, 2, or 3) will be accepted
+
+-- "input:" for the string on the tape that the program will execute over
+-- blanks must be denoted by an underscore symbol (_)
+-- use a pound symbol (#) to separate input for each tape
+-- Example: for 3 tapes,
+			"input: 101#011#11"
+-- user is expected to provide valid input for their own program
+-- error messages for illogical input will work as described in [ERROR HANDLING]
+
+-- "init:" for the initial state
+-- case sensitive
+
+-- "accept:" for accept state(s)
+-- case sensitive
+
+- Example:
+	//user comments and documentation
+	name: User Program
+	tapes: 2
+	input: 1011_0_1#00_1_11
+	init: begin
+	accept: result, valid, true
+	BEGIN
+	//user code...
+	END
+
+-------------------------------------------------------------------------------
+[ERROR HANDLING]
+- Incorrect Header
+-- print an error message
+-- (i.e. "Incorrect header in program")
+
+- Incorrect Tuples
+-- print an error message
+-- (i.e. "Incorrect # of elements at line //")
+
+- Incorrect Element (character count)
+-- print an error message
+-- (i.e. "Incorrect element in line //: symbols must be a single character")
+
+- Incorrect Element (valid transition)
+-- print an error message
+-- (i.e. "incorrect element in line //: transition must be // // // // or //")
+
+- Logically Incorrect States
+-- print an error message
+-- (i.e. "Error: no rule for the state // and symbol //")
+
+-------------------------------------------------------------------------------
+[STYLE]
+- comments must be preceded by a double forward slash "//"
+-- everything in the line after "//" will be ignored
+
+- a header is expected in every program with the labels described in [FORMAT]
+
+- User must write one tuple per line
+-- each tuple must adhere to rules detailed in [SYNTAX]
+
+-------------------------------------------------------------------------------
+[VALIDITY]
+- program code syntax will be evaluated by parser after the user opens a file
+
+-------------------------------------------------------------------------------
+[MISC]
+- user programs will be expected in a .txt file format
+- whitespace, except for newlines, after the "BEGIN" keyword, in the program header, will be ignored
+- parser will use the "END" keyword to find the end of the user input

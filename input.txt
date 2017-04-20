@@ -1,0 +1,27 @@
+//this file made specifically to test the TM
+//Messages...
+//Edgar: I made a copy of this and keep it in my local directory. Feel free to modify.
+//Edgar: Modified this input file to test with updated project specs
+//end Messages
+//user comments and documentation
+
+name: User Program
+
+input: 1011_0_1#10_1_11
+
+
+init: init
+accept: result, valid, true
+
+BEGIN
+//user code...
+//	state,		read,write,move,		read,write,move,		state
+
+	init,		1, 1, <,				1,2,>,					accept
+	init,		1, 1, <,				1,2,>,					reject
+	accept,		1, 1, <,				1,2,>,					accept
+	accept,		1, 1, <,				1,2,>,					reject
+	accept,		1, 1, <,				1,2,>,					Foo
+	reject,		1, 1, <,				1,2,>,					reject
+
+END
