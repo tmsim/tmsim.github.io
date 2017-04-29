@@ -60,34 +60,36 @@ function readFile(){
         softreset();
         displayTextWindow(file);
         
-        //the following try/catch to prevent excessively long or empty text files
+        //the following try/catch to prevent excessively long, short, or empty text files
         try{
             originalInput = this.result.split('\n');    //seperate by lines
             if(originalInput.length > 50000) throw "Too many lines in file";
+            if(originalInput.length <= 6 ) throw "Not enough lines in file";
             if(originalInput.length === 0) throw "Empty file";
+        
+            //continue if no errors in file
+            userArray = deleteComments(originalInput);  //get rid of comments
+        
+        
+            //note: the following 2 assignments will ignore blank lines
+            header = getHeader(userArray, labelList);   //take the lines with header labels only
+            machineCode = getMachineCode(userArray);    //take everything from the BEGIN keyword until the END keyword
+        
+            //for(var k = 0; k < header.length; k++)
+            //    console.log(header[k]);
+        
+            hVal = getHeaderValues(header, labelList);
+            sendValues(hVal, machineCode);
+        
+        
+            //logResults();
+            initializeprogram();
+            //logResults();
         }
         catch(error){
             clearValues();
             fileContentException(error);
         }
-        
-        userArray = deleteComments(originalInput);  //get rid of comments
-        
-        
-        //note: the following 2 assignments will ignore blank lines
-        header = getHeader(userArray, labelList);   //take the lines with header labels only
-        machineCode = getMachineCode(userArray);    //take everything after the BEGIN keyword until the END keyword
-        
-        //for(var k = 0; k < header.length; k++)
-        //    console.log(header[k]);
-        
-        hVal = getHeaderValues(header, labelList);
-        sendValues(hVal, machineCode);
-        
-        
-        //logResults();
-        initializeprogram();
-        //logResults();
     };
     //logResults();
 }
@@ -114,6 +116,7 @@ function logResults(){
  */
 function sendValues(hVal, machineCode){
     //clear important values in interpreter before sending new values
+    //not executing clearValues as that function is also meant to halt execution
     tape1 = [];
     tape2 = [];
     tape3 = [];
@@ -202,7 +205,7 @@ function clearValues(){
     if(myWindow)
         myWindow.close();
     
-    //interpreter values
+    //interpreter and state diagram values
     tape1 = [];
     tape2 = [];
     tape3 = [];
@@ -221,11 +224,12 @@ function clearValues(){
     loops = [];
     initialstate = "";
     acceptstate = "";
+    circles = [];
+    softreset();
     
     //parser values
     hVal = [];
     machineCode = [];
-    
 }
 
 /**
@@ -357,9 +361,10 @@ function getHeader(userArray, labelList){
             syntaxException(error);
         }
         header[i] = userArray[line];
-        console.log(labelList[i] + ": " + "Line #" + line);
-        console.log(userArray[line]);
-        console.log(originalInput[line]);
+        //debugging...
+        //console.log(labelList[i] + ": " + "Line #" + line);
+        //console.log(userArray[line]);
+        //console.log(originalInput[line]);
     }
     return header;
 }
@@ -395,13 +400,41 @@ function getMachineCode(userArray){
     var machineCode = [];
     var tupleArray = [];
     var j = 0;
+    start++; //line after the 'BEGIN' keyword
     
-    for(var i = start + 1; i < end; i++){
+    //variable 'end' is the line where the 'END' keyword was found
+    for(var i = start; i < end; i++){
+        //ignore blank lines
         if(userArray[i] !== ''){
             tupleArray = userArray[i].replace(/\s+/g, '');
             tupleArray = tupleArray.split(',');
+            
             machineCode[j] = tupleArray;
             j++;
+        
+        
+            try{
+                var length = tupleArray.length;
+            
+                if(length !== 5)
+                    if(length !== 8)
+                        if(length !== 11)
+                            throw "Invalid number of elements";
+                
+                if(j > 1){ //conditional: if more than one instruction has been assigned to machineCode
+                    var k = j-1;
+                    if(machineCode[k-1].length !== machineCode[k].length){
+                        throw "Tuple length does not match between all instructions";
+                    }
+                }
+            }
+            catch(error){
+                i = end; //just in case, to exit the for-loop
+                clearValues();
+                syntaxException(error);
+                //header = []; //prevents finding header values
+                return []; //prevents drawing the state diagram, clearValues() doesn't complete fast enough
+            }
         }
     }
     return machineCode;
@@ -486,6 +519,7 @@ function checkDuplicate(userArray, str){
         return -1;
 }
 
+/*
 //returns the index in the originalInput where an error string was found
 //value returned will be the line from the user's original input
 function findUserErrorLine(errorString, userArray, originalInput){
@@ -498,6 +532,7 @@ function findUserErrorLine(errorString, userArray, originalInput){
     }
     return line;
 }
+*/
 
 /**
  * Displays the user code out to a window for highlighting.
